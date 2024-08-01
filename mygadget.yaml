@@ -1,0 +1,18 @@
+apiVersion: gadget.inspektor.dev/v1
+kind: Gadget
+metadata:
+  name: mygadget
+spec:
+  image: "mygadget:latest"
+  description: "A gadget to test eBPF programs"
+  commands:
+    - name: "load"
+      args:
+        - "load"
+        - "/workspace/tc_traffic_control.o"
+        - "--verify-image=false"
+    - name: "attach"
+      args:
+        - "attach"
+        - "tc filter add dev eth0 egress bpf da obj /workspace/tc_traffic_control.o sec classifier/egress/drop"
+        - "tc filter add dev eth0 ingress bpf da obj /workspace/tc_traffic_control.o sec classifier/ingress/drop"
